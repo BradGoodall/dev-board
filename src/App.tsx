@@ -1,33 +1,69 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
+import 'bootstrap/dist/css/bootstrap.min.css';
+import Button from "react-bootstrap/Button";
+import TopNavbar from './components/TopNavbar';
+import Auth from './components/Auth';
+import CreateTask from './components/CreateTask';
+import { db } from './config/firebase';
+import { useState, useEffect } from "react";
+import { getDocs, collection, deleteDoc, doc } from 'firebase/firestore';
+import { Container } from 'react-bootstrap';
+import { Timestamp } from 'firebase/firestore/lite';
+
+const siteTitle: string = "devBoard"
 
 function App() {
-  const [count, setCount] = useState(0)
+  type Task = {
+    id: string
+    title: string,
+    description: string,
+    timeCreated: Timestamp
+  }
+  const [taskList, setTaskList] = useState<Array<Task>>()
+
+  const taskCollectionRef = collection(db, "tasks")
+
+  const getTaskList = async () => {
+    // Get data from db
+    try {
+      const data = await getDocs(taskCollectionRef);
+      const filteredData = data.docs.map((doc) => ({ ...doc.data(), id: doc.id, } as Task));
+      setTaskList(filteredData);
+      console.log(taskList);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  const deleteTask = async (id: string) => {
+    try {
+      const taskDoc = doc(db, "tasks", id)
+      await deleteDoc(taskDoc)
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  useEffect(() => {
+    getTaskList();
+  }, [])
 
   return (
     <>
+      <TopNavbar title={siteTitle} />
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        {taskList?.map((task: Task) => (
+          <div key={task.id}>
+            <h1>{task.title}</h1>
+            <p>{task.description}</p>
+            <p>{task.timeCreated.toDate().toDateString()}</p>
+            <Button onClick={() => deleteTask(task.id)}>Delete Task</Button>
+          </div>
+
+        ))}
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <CreateTask />
+      <Auth />
     </>
   )
 }
