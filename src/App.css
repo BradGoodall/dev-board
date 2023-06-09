@@ -3,3 +3,11 @@
   bottom: 0.1rem;
   margin-right: 0.5rem;
 }
+
+.windowBox {
+  border: solid 0.2rem grey;
+  border-radius: 2rem;
+  margin-top: 2rem;
+  padding: 3rem;
+  box-shadow: 0px 2rem 4rem grey;
+}
