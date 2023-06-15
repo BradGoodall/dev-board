@@ -1,6 +1,6 @@
 import TopNavbar from "./TopNavbar";
 import JobList from "./JobList";
-import CreateTask from "./CreateTask";
+import CreateJob from "./CreateJobCard";
 import { useParams } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 // Firebase
@@ -16,7 +16,7 @@ function Board() {
     const [boardID, setBoardID] = useState("N/A");
     const { boardURL } = useParams();
 
-    const [openCreateTask, setOpenCreateTask] = useState(false);
+    const [openCreateJob, setOpenCreateJob] = useState(false);
 
     useEffect(() => {
         if (boardURL) {
@@ -30,8 +30,8 @@ function Board() {
             <h1>Board {boardID}</h1>
             {user && (
                 <>
-                    <Button onClick={() => { setOpenCreateTask(true) }}>Create a Task</Button>
-                    {openCreateTask && <CreateTask />}
+                    <Button onClick={() => { setOpenCreateJob(true) }}>Create a Job</Button>
+                    {openCreateJob && <CreateJob />}
                     <JobList />
                 </>
             )}

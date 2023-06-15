@@ -6,18 +6,18 @@ import { addDoc, collection } from 'firebase/firestore'
 import { db, auth } from '../config/firebase';
 import { Timestamp } from "firebase/firestore"
 
-function CreateTask() {
+function CreateJob() {
 
-    const taskCollectionRef = collection(db, "tasks")
+    const jobCollectionRef = collection(db, "jobs")
 
-    const [taskTitle, setTaskTitle] = useState("");
-    const [taskDescription, setTaskDescription] = useState("");
+    const [jobTitle, setJobTitle] = useState("");
+    const [jobDescription, setJobDescription] = useState("");
 
-    const submitNewTask = async () => {
+    const submitNewJob = async () => {
         try {
             const timestamp = Timestamp.fromDate(new Date());
-            await addDoc(taskCollectionRef, { title: taskTitle, description: taskDescription, timeCreated: timestamp, userID: auth.currentUser?.uid })
-            console.log('Task Created')
+            await addDoc(jobCollectionRef, { title: jobTitle, description: jobDescription, timeCreated: timestamp, userID: auth.currentUser?.uid })
+            console.log('Job Created')
         } catch (err) {
             console.error(err);
         }
@@ -25,17 +25,17 @@ function CreateTask() {
 
     return (
         <Container style={{ width: '30rem', border: 'solid 0.2rem', borderRadius: '2rem', marginTop: '2rem', padding: '3rem' }}>
-            <h3>Create a new task</h3>
+            <h3>Create a new job</h3>
             <Form>
                 <Form.Group className="mb-3">
-                    <Form.Control size="lg" type="text" placeholder="Task Title" onChange={(e) => setTaskTitle(e.target.value)} />
+                    <Form.Control size="lg" type="text" placeholder="Job Title" onChange={(e) => setJobTitle(e.target.value)} />
                 </Form.Group>
 
                 <Form.Group className="mb-3">
-                    <Form.Control style={{ height: "10rem" }} as="textarea" placeholder="Description" onChange={(e) => setTaskDescription(e.target.value)} />
+                    <Form.Control style={{ height: "10rem" }} as="textarea" placeholder="Description" onChange={(e) => setJobDescription(e.target.value)} />
                 </Form.Group>
-                <Button variant="primary" onClick={submitNewTask}>
-                    Create Task
+                <Button variant="primary" onClick={submitNewJob}>
+                    Create Job
                 </Button>
                 <Button style={{ marginLeft: "0.5rem" }} variant="outline-danger">
                     Cancel
@@ -45,4 +45,4 @@ function CreateTask() {
     )
 }
 
-export default CreateTask;
+export default CreateJob;
