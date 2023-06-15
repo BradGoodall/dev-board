@@ -24,23 +24,24 @@ function CreateTask() {
     }
 
     return (
-        <>
-            <Container style={{ width: '30rem', border: 'solid 0.2rem', borderRadius: '2rem', marginTop: '2rem', padding: '3rem' }}>
-                <h3>Create a task</h3>
-                <Form>
-                    <Form.Group className="mb-3">
-                        <Form.Control size="lg" type="text" placeholder="Task Title" onChange={(e) => setTaskTitle(e.target.value)} />
-                    </Form.Group>
+        <Container style={{ width: '30rem', border: 'solid 0.2rem', borderRadius: '2rem', marginTop: '2rem', padding: '3rem' }}>
+            <h3>Create a new task</h3>
+            <Form>
+                <Form.Group className="mb-3">
+                    <Form.Control size="lg" type="text" placeholder="Task Title" onChange={(e) => setTaskTitle(e.target.value)} />
+                </Form.Group>
 
-                    <Form.Group className="mb-3">
-                        <Form.Control style={{ height: "10rem" }} as="textarea" placeholder="Description" onChange={(e) => setTaskDescription(e.target.value)} />
-                    </Form.Group>
-                    <Button variant="primary" onClick={submitNewTask}>
-                        Create Task
-                    </Button>
-                </Form>
-            </Container>
-        </>
+                <Form.Group className="mb-3">
+                    <Form.Control style={{ height: "10rem" }} as="textarea" placeholder="Description" onChange={(e) => setTaskDescription(e.target.value)} />
+                </Form.Group>
+                <Button variant="primary" onClick={submitNewTask}>
+                    Create Task
+                </Button>
+                <Button style={{ marginLeft: "0.5rem" }} variant="outline-danger">
+                    Cancel
+                </Button>
+            </Form>
+        </Container>
     )
 }
 
