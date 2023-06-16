@@ -6,7 +6,13 @@ import { addDoc, collection } from 'firebase/firestore'
 import { db, auth } from '../config/firebase';
 import { Timestamp } from "firebase/firestore"
 
-function CreateJob() {
+interface Props {
+    boardID: String
+    refresh: () => void
+    setOpenCreateJob: React.Dispatch<React.SetStateAction<boolean>>;
+}
+
+export const CreateJobCard: React.FC<Props> = ({ boardID, refresh, setOpenCreateJob }) => {
 
     const jobCollectionRef = collection(db, "jobs")
 
@@ -16,8 +22,11 @@ function CreateJob() {
     const submitNewJob = async () => {
         try {
             const timestamp = Timestamp.fromDate(new Date());
-            await addDoc(jobCollectionRef, { title: jobTitle, description: jobDescription, timeCreated: timestamp, userID: auth.currentUser?.uid })
+            await addDoc(jobCollectionRef, { title: jobTitle, description: jobDescription, timeCreated: timestamp, userID: auth.currentUser?.uid, boardID: boardID })
             console.log('Job Created')
+            console.log('#WRITE Created a New Job Card');
+            setOpenCreateJob(false);
+            refresh();
         } catch (err) {
             console.error(err);
         }
@@ -44,5 +53,3 @@ function CreateJob() {
         </Container>
     )
 }
-
-export default CreateJob;

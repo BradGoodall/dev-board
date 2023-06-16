@@ -1,5 +1,7 @@
+// React-Bootstrap
 import Container from "react-bootstrap/Container"
 import Button from "react-bootstrap/Button";
+// Components
 import TopNavbar from "./TopNavbar";
 
 function Home() {

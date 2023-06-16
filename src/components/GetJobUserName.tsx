@@ -13,7 +13,7 @@ interface Props {
 export const GetJobUserName: React.FC<Props> = ({ userID }) => {
 
     // Retrieve the Creators Username from a jobID
-    const [username, setUsername] = useState('');
+    const [username, setUsername] = useState('Loading...');
 
     useEffect(() => {
         const getUserName = async () => {
@@ -21,6 +21,7 @@ export const GetJobUserName: React.FC<Props> = ({ userID }) => {
             const jobDocument = await getDoc(docRef);
             const userData = jobDocument.data() as UserData;
             setUsername(userData.name);
+            console.log('#READ Retrieved Username')
         }
         getUserName()
     }, []);

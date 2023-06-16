@@ -3,14 +3,14 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { FcGoogle } from "react-icons/fc"
 import { auth, googleProvider, db } from "../config/firebase";
-import { setDoc, doc, Timestamp, getDoc, updateDoc } from 'firebase/firestore';
+import { setDoc, doc, Timestamp, getDoc, updateDoc, addDoc, collection } from 'firebase/firestore';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { useState } from "react";
 import TopNavbar from "./TopNavbar";
 //Routing
 import { useNavigate } from "react-router-dom";
 
-function Auth() {
+function LoginForm() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [firstName, setFirstName] = useState("");
@@ -23,7 +23,7 @@ function Auth() {
     const createAccountEmailPass = async () => {
         try {
             await createUserWithEmailAndPassword(auth, email, password);
-            updateUserDatabase(firstName + " " + lastName);
+            await updateUserDatabase(firstName + " " + lastName);
             navigate("/board");
         }
         catch (err) {
@@ -46,7 +46,7 @@ function Auth() {
     const signInWithGoogle = async () => {
         try {
             await signInWithPopup(auth, googleProvider);
-            updateUserDatabase(auth.currentUser?.displayName?.toString());
+            await updateUserDatabase(auth.currentUser?.displayName?.toString());
             navigate("/board");
         }
         catch (err) {
@@ -59,15 +59,33 @@ function Auth() {
         const userID = auth.currentUser?.uid.toString();
         const docRef = doc(db, "users/" + userID);
         const userDoc = await getDoc(docRef);
+        // Create new user
         if (!userDoc.exists()) {
             const timestamp = Timestamp.fromDate(new Date());
-            await setDoc(docRef, { name: userName, timeCreated: timestamp, lastLogin: timestamp, userID: auth.currentUser?.uid })
+            // Generate a new board
+            const boardRef = await addDoc(collection(db, "boards"), {
+                ownerID: auth.currentUser?.uid,
+                boardName: userName!.split(' ')[0] + "'s Board",
+                timeCreated: timestamp
+            });
+            console.log('#WRITE Created a New Board');
+            await setDoc(docRef, {
+                name: userName,
+                timeCreated: timestamp,
+                lastLogin: timestamp,
+                userID: auth.currentUser?.uid,
+                boardID: boardRef.id,
+                imageUrl: (auth.currentUser?.photoURL != null) ? auth.currentUser?.photoURL : "/default_profile_image.png"
+            })
+            console.log('#WRITE Created a New User Account');
             console.log("Account Created")
         }
         else {
+            // Update existing data
             const timestamp = Timestamp.fromDate(new Date());
             await updateDoc(docRef, { lastLogin: timestamp })
             console.log("Account Already Exists, Logged In")
+            console.log('#WRITE Updated User Login Timestamp');
         }
     }
 
@@ -116,4 +134,4 @@ function Auth() {
     )
 }
 
-export default Auth;
+export default LoginForm;
