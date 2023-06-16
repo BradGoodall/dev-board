@@ -82,7 +82,7 @@ function Board() {
         <>
             <TopNavbar />
             {user && boardID != "" && (
-                <>
+                <div style={{ padding: "2rem" }}>
                     {!editBoardName && (
                         <h1>{boardData?.boardName} <Button size='sm' variant="secondary" onClick={() => setEditBoardName(true)}>Edit Board Title</Button></h1>
                     )}
@@ -92,9 +92,17 @@ function Board() {
                             <Button size='sm' variant="secondary" onClick={() => { updateBoardName(newBoardName); setEditBoardName(false) }}>Save</Button>
                         </>
                     )}
-                    <h5 style={{ color: 'gray' }}>Board ID: {boardID}</h5>
+                    <h6 style={{ color: 'gray' }}>Sharable URL: <a href={"http://devboard-io.vercel.app/board/" + boardID}>devboard-io.vercel.app/board/{boardID}</a></h6>
 
                     <JobList boardID={boardID} />
+                </div>
+            )}
+            {!user && (
+                <>
+                    <div style={{ padding: "2rem" }}>
+                        <h1>For now, you must be logged in to view a board.</h1>
+                        <h3>This will change in the future.</h3>
+                    </div>
                 </>
             )}
         </>
