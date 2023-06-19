@@ -4,20 +4,21 @@
   margin-right: 0.5rem;
 }
 
-.windowBox {
-  border: solid 0.2rem grey;
-  border-radius: 2rem;
-  margin-top: 2rem;
-  padding: 3rem;
-  box-shadow: 0px 2rem 4rem grey;
-}
-
 h1,
 h2,
 h3,
 h4,
 h5 {
   font-family: 'IBM Plex Sans', sans-serif;
+}
+
+.windowBox {
+  border: solid 0.2rem grey;
+  border-radius: 2rem;
+  margin: 2rem auto auto auto;
+  padding: 3rem;
+  box-shadow: 0px 2rem 4rem grey;
+  width: 40rem;
 }
 
 .navbar-user-image {
@@ -40,4 +41,11 @@ h5 {
 
 .modal-button {
   margin: 0 2rem 0 2rem;
+}
+
+.login-container {
+  border: solid 0.2rem;
+  border-radius: 2rem;
+  margin-top: 2rem;
+  padding: '3rem';
 }

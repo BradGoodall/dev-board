@@ -92,7 +92,7 @@ function Board() {
                             <Button size='sm' variant="secondary" onClick={() => { updateBoardName(newBoardName); setEditBoardName(false) }}>Save</Button>
                         </>
                     )}
-                    <h6 style={{ color: 'gray' }}>Sharable URL: <a href={"http://devboard-io.vercel.app/board/" + boardID}>devboard-io.vercel.app/board/{boardID}</a></h6>
+                    <h6 style={{ color: 'gray' }}>Sharable URL: <a href={"https://devboard.io/board/" + boardID}>devboard.io/board/{boardID}</a></h6>
 
                     <JobList boardID={boardID} />
                 </div>
