@@ -1,6 +1,6 @@
 // Firebase Authorisation
 import { AuthContext } from './AuthProvider';
-//React
+// React
 import { useState, useEffect, useContext } from 'react'
 // Components
 import TopNavbar from "./TopNavbar";
@@ -11,6 +11,7 @@ import { useParams } from 'react-router-dom'
 import { db } from '../config/firebase';
 import { getDoc, doc, updateDoc } from 'firebase/firestore'
 // React-Bootstrap
+import { Container, Row, Col } from "react-bootstrap";
 import { Button } from 'react-bootstrap'
 import { Form } from "react-bootstrap";
 
@@ -18,17 +19,19 @@ type BoardData = {
     boardName: string,
     boardCustomURL: string,
     ownerID: string
+    backgroundURL: string
 }
 
 function Board() {
     const user = useContext(AuthContext);
 
+    // Board Data
+    const { boardURL } = useParams();
     const [boardID, setBoardID] = useState("");
     const [boardData, setBoardData] = useState<BoardData>();
     const [newBoardName, setNewBoardName] = useState("");
-    const { boardURL } = useParams();
-
     const [editBoardName, setEditBoardName] = useState(false);
+    const [backgroundURL, setBackgroundURL] = useState("");
 
 
 
@@ -49,7 +52,8 @@ function Board() {
             const boardDocument = await getDoc(boardDocRef);
             const boardData = boardDocument.data() as BoardData;
             setBoardData(boardData);
-            setNewBoardName(boardData.boardName)
+            setNewBoardName(boardData.boardName);
+            setBackgroundURL(boardData.backgroundURL);
             console.log('#READ Retreived Board Data & Name');
 
         } catch (error) {
@@ -57,6 +61,7 @@ function Board() {
         };
     }
 
+    // Update the Boards Name
     const updateBoardName = async (name: string) => {
         const docRef = doc(db, "boards/" + boardID);
         await updateDoc(docRef, {
@@ -67,6 +72,7 @@ function Board() {
         await retrieveBoardData(boardID);
     }
 
+    // Upon Loading, Set the BoardID from the URL (if there is one) and retrieve the board data.
     useEffect(() => {
         if (boardURL) {
             setBoardID(boardURL)
@@ -80,20 +86,25 @@ function Board() {
         <>
             <TopNavbar />
             {boardID != "" && boardData && (
-                <div style={{ padding: "2rem" }}>
-                    {!editBoardName && (
-                        <h1>{boardData?.boardName} {user?.userID == boardData.ownerID && (<Button size='sm' variant="secondary" onClick={() => setEditBoardName(true)}>Edit Board Title</Button>)}</h1>
-                    )}
-                    {editBoardName && (
-                        <>
-                            <Form.Control type="text" value={newBoardName} onChange={(e) => setNewBoardName(e.target.value)} />
-                            <Button size='sm' variant="secondary" onClick={() => { updateBoardName(newBoardName); setEditBoardName(false) }}>Save</Button>
-                        </>
-                    )}
-                    <h6 style={{ color: 'gray' }}>Sharable URL: <a href={"https://devboard.io/board/" + boardID}>devboard.io/board/{boardID}</a></h6>
-
-                    <JobList boardID={boardID} boardData={boardData} />
-                </div>
+                <Container fluid className='board' style={{ padding: "2rem", minHeight: "96vh", backgroundImage: `url(${backgroundURL})` }}>
+                    <Row>
+                        <Col xs="3">
+                            <div className='lane'>
+                                <h1 className='board-title-text'>{boardData?.boardName}</h1> {user?.userID == boardData.ownerID && !editBoardName && (<Button className="h1-button" size='sm' variant="secondary" onClick={() => setEditBoardName(true)}>Edit Board Title</Button>)}
+                                <h6 className='board-title-text'>Sharable URL: <a href={"https://devboard.io/board/" + boardID}>devboard.io/board/{boardID}</a></h6>
+                            </div>
+                            {editBoardName && (
+                                <>
+                                    <Form.Control type="text" value={newBoardName} onChange={(e) => setNewBoardName(e.target.value)} />
+                                    <Button size='sm' variant="secondary" onClick={() => { updateBoardName(newBoardName); setEditBoardName(false) }}>Save</Button>
+                                </>
+                            )}
+                        </Col>
+                        <Col xs="8">
+                            <JobList boardID={boardID} boardData={boardData} />
+                        </Col>
+                    </Row>
+                </Container>
             )}
             {boardID == "" && !user && (
                 <>

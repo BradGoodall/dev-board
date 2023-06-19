@@ -31,6 +31,7 @@ export const JobCardModal: React.FC<Props> = ({ job, refresh, openCard }) => {
 
     const [jobTitle, setJobTitle] = useState(job.title);
     const [jobDescription, setJobDescription] = useState(job.description);
+    const [editJob, setEditJob] = useState(false);
 
     // Update a Job Card
     const updateJob = async () => {
@@ -43,7 +44,7 @@ export const JobCardModal: React.FC<Props> = ({ job, refresh, openCard }) => {
         })
         console.log('#WRITE Updated a Job Card');
         refresh();
-        closeModal();
+        setEditJob(false);
     }
 
     // Delete a Job Card
@@ -73,11 +74,23 @@ export const JobCardModal: React.FC<Props> = ({ job, refresh, openCard }) => {
                     <Modal.Title>{jobTitle}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form.Label>Job Title</Form.Label>
-                    <Form.Control type="text" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} />
-                    <Form.Label>Description</Form.Label>
-                    <Form.Control style={{ height: "5rem" }} as="textarea" value={jobDescription} onChange={(e) => setJobDescription(e.target.value)}></Form.Control><br />
-                    <h4>Job Tasks</h4>
+                    {!editJob && (
+                        <>
+                            <h4>Description</h4>
+                            <p>{jobDescription}</p>
+                        </>
+                    )}
+                    {editJob && (
+                        <>
+                            <Form.Label>Job Title</Form.Label>
+                            <Form.Control type="text" value={jobTitle} onChange={(e) => setJobTitle(e.target.value)} />
+                            <Form.Label>Description</Form.Label>
+                            <Form.Control style={{ height: "5rem" }} as="textarea" value={jobDescription} onChange={(e) => setJobDescription(e.target.value)}></Form.Control><br />
+                        </>
+                    )}
+
+                    <h4>Placeholder Job Tasks</h4>
+                    <p>These will be populated from the database later.</p>
                     <div style={{ padding: '0.5rem', borderStyle: 'solid', borderColor: 'gray' }}>
                         <Form.Check type='checkbox' label="Job Task 1" />
                         <Form.Check type='checkbox' label="Job Task 2" />
@@ -89,11 +102,17 @@ export const JobCardModal: React.FC<Props> = ({ job, refresh, openCard }) => {
 
                 </Modal.Body>
                 <Modal.Footer>
-                    {job.userID == auth.currentUser?.uid && (
+                    {job.userID == auth.currentUser?.uid && editJob && (
                         <>
                             <Button className="modal-button" variant="danger" onClick={() => deleteJob(job, job.id)}>Delete Job</Button>
                             <Button className="modal-button" variant="primary" onClick={() => { updateJob() }}>Save Changes</Button>
-                            <Button variant="secondary" onClick={closeModal}>Cancel</Button>
+                            <Button variant="secondary" onClick={() => setEditJob(false)}>Discard Changes</Button>
+                        </>
+                    )}
+                    {job.userID == auth.currentUser?.uid && !editJob && (
+                        <>
+                            <Button variant="primary" onClick={() => setEditJob(true)}>Edit Job</Button>
+                            <Button variant="secondary" onClick={closeModal}>Close</Button>
                         </>
                     )}
                     {job.userID != auth.currentUser?.uid && (

@@ -103,7 +103,8 @@ function LoginForm() {
             const boardRef = await addDoc(collection(db, "boards"), {
                 ownerID: auth.currentUser?.uid,
                 boardName: userName!.split(' ')[0] + "'s Board",
-                timeCreated: timestamp
+                timeCreated: timestamp,
+                backgroundURL: "/backgrounds/sabri-tuzcu-mountain.jpg"
             });
             console.log('#WRITE Created a New Board');
             await setDoc(docRef, {
@@ -129,13 +130,13 @@ function LoginForm() {
     }
 
     return (
-        <>
+        <div className="home" style={{ minHeight: "100vh" }}>
             <TopNavbar />
             <Container className="window-box" style={{ width: '30rem', border: 'solid 0.2rem', borderRadius: '2rem', marginTop: '2rem', padding: '3rem' }}>
                 {!emailChecked && (
                     <>
-                        <h1 style={{ textAlign: "center" }}>Sign-In to <span style={{ fontFamily: "'Share Tech Mono', monospace" }}>devBoard</span></h1>
-                        <Form>
+                        <h1 className="window-box-text" style={{ textAlign: "center" }}>Sign-In to <span style={{ fontFamily: "'Share Tech Mono', monospace" }}>devBoard</span></h1>
+                        <Form className="window-box-text">
                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                 <Form.Label>Email address</Form.Label>
                                 <Form.Control type="email" placeholder="Enter email" value={email}
@@ -149,8 +150,8 @@ function LoginForm() {
                 )}
                 {emailChecked && emailExists && (
                     <>
-                        <h1 style={{ textAlign: "center" }}>Sign-In to <span style={{ fontFamily: "'Share Tech Mono', monospace" }}>devBoard</span></h1>
-                        <Form>
+                        <h1 className="window-box-text" style={{ textAlign: "center" }}>Sign-In to <span style={{ fontFamily: "'Share Tech Mono', monospace" }}>devBoard</span></h1>
+                        <Form className="window-box-text">
                             <Form.Group className="mb-3" controlId="formBasicEmail">
                                 <Form.Label>Email address</Form.Label>
                                 <Form.Control type="email" placeholder="Enter email" value={email}
@@ -173,8 +174,8 @@ function LoginForm() {
                 )}
                 {emailChecked && !emailExists && (
                     <>
-                        <h1 style={{ textAlign: "center" }}>Create a <span style={{ fontFamily: "'Share Tech Mono', monospace" }}>devBoard</span> account</h1>
-                        <Form>
+                        <h1 className="window-box-text" style={{ textAlign: "center" }}>Create a <span style={{ fontFamily: "'Share Tech Mono', monospace" }}>devBoard</span> account</h1>
+                        <Form className="window-box-text">
                             <Form.Group className="mb-3" controlId="formFirstLastName">
                                 <Form.Label>First name</Form.Label>
                                 <Form.Control placeholder="John"
@@ -207,12 +208,12 @@ function LoginForm() {
             </Container >
 
             <Container className="window-box" style={{ width: '30rem', border: 'solid 0.2rem', borderRadius: '2rem', marginTop: '2rem', padding: '3rem', textAlign: "center" }}>
-                <h4>Alternative Sign-In Methods</h4>
+                <h4 className="window-box-text">Alternative Sign-In Methods</h4>
                 <Button size="lg" variant="light" type="submit" onClick={(e) => signInWithGoogle(e)}>
                     <FcGoogle /> Sign-In with Google
                 </Button>
             </Container>
-        </>
+        </div>
     )
 }
 

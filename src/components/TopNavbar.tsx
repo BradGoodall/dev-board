@@ -37,7 +37,7 @@ function TopNavbar() {
                 <Container>
                     <Navbar.Brand href="/">
                         <FaHashtag id="nav-icon" />
-                        <span style={{ fontFamily: "'Share Tech Mono', monospace" }}>devBoard</span> <Badge pill bg="warning" text='dark'>Beta</Badge>
+                        <span style={{ fontFamily: "'Share Tech Mono', monospace" }}>devBoard</span> <Badge className='navbar-badge' pill bg="warning" text='dark'>Beta</Badge>
                     </Navbar.Brand>
                     <Nav className="me-auto">
                         <Nav.Link href="/">Home</Nav.Link>
