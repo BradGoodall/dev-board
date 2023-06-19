@@ -131,7 +131,7 @@ function LoginForm() {
     return (
         <>
             <TopNavbar />
-            <Container className="windowBox" style={{ width: '30rem', border: 'solid 0.2rem', borderRadius: '2rem', marginTop: '2rem', padding: '3rem' }}>
+            <Container className="window-box" style={{ width: '30rem', border: 'solid 0.2rem', borderRadius: '2rem', marginTop: '2rem', padding: '3rem' }}>
                 {!emailChecked && (
                     <>
                         <h1 style={{ textAlign: "center" }}>Sign-In to <span style={{ fontFamily: "'Share Tech Mono', monospace" }}>devBoard</span></h1>
@@ -206,7 +206,7 @@ function LoginForm() {
                 )}
             </Container >
 
-            <Container className="windowBox" style={{ width: '30rem', border: 'solid 0.2rem', borderRadius: '2rem', marginTop: '2rem', padding: '3rem', textAlign: "center" }}>
+            <Container className="window-box" style={{ width: '30rem', border: 'solid 0.2rem', borderRadius: '2rem', marginTop: '2rem', padding: '3rem', textAlign: "center" }}>
                 <h4>Alternative Sign-In Methods</h4>
                 <Button size="lg" variant="light" type="submit" onClick={(e) => signInWithGoogle(e)}>
                     <FcGoogle /> Sign-In with Google

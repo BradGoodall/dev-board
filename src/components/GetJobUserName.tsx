@@ -4,6 +4,7 @@ import { getDoc, doc } from 'firebase/firestore';
 
 type UserData = {
     name: string,
+    imageUrl: string
 }
 
 interface Props {
@@ -14,6 +15,7 @@ export const GetJobUserName: React.FC<Props> = ({ userID }) => {
 
     // Retrieve the Creators Username from a jobID
     const [username, setUsername] = useState('Loading...');
+    const [imgURL, setImgURL] = useState("");
 
     useEffect(() => {
         const getUserName = async () => {
@@ -21,12 +23,13 @@ export const GetJobUserName: React.FC<Props> = ({ userID }) => {
             const jobDocument = await getDoc(docRef);
             const userData = jobDocument.data() as UserData;
             setUsername(userData.name);
+            setImgURL(userData.imageUrl);
             console.log('#READ Retrieved Username')
         }
         getUserName()
     }, []);
 
     return (
-        <>{username}</>
+        <><img className='navbar-user-image' src={imgURL} alt="Profile Image" /> {username} </>
     )
 }

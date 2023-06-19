@@ -1,10 +1,12 @@
 import Container from "react-bootstrap/Container"
 import { db } from '../config/firebase';
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { getDocs, collection, Timestamp } from 'firebase/firestore';
 import { JobCard } from "./JobCard";
 import { Button } from "react-bootstrap";
 import { CreateJobCard } from "./CreateJobCard";
+// Firebase Authorisation
+import { AuthContext } from './AuthProvider';
 
 // Define Job Type
 type Job = {
@@ -16,11 +18,20 @@ type Job = {
     boardID: string
 }
 
+type BoardData = {
+    boardName: string,
+    boardCustomURL: string,
+    ownerID: string
+}
 interface Props {
     boardID: String
+    boardData: BoardData
 }
 
-export const JobList: React.FC<Props> = ({ boardID }) => {
+
+export const JobList: React.FC<Props> = ({ boardID, boardData }) => {
+    const user = useContext(AuthContext);
+
     const jobCollectionRef = collection(db, "jobs");
 
     const [jobList, setJobList] = useState<Array<Job>>()
@@ -46,8 +57,8 @@ export const JobList: React.FC<Props> = ({ boardID }) => {
 
     return (
         <>
-            <Container style={{ width: 'auto', border: 'solid 0.2rem', borderRadius: '2rem', marginTop: '2rem', padding: '2rem' }}>
-                <h1>Job List <Button onClick={() => { setOpenCreateJob(!openCreateJob) }}>Create New Job</Button></h1>
+            <Container className="window-box">
+                <h1>Job List {user?.userID == boardData.ownerID && (<Button onClick={() => { setOpenCreateJob(!openCreateJob) }}>Create New Job</Button>)}</h1>
                 {openCreateJob && <CreateJobCard boardID={boardID} refresh={getJobList} setOpenCreateJob={setOpenCreateJob} />}
                 {jobList?.map((job: Job) => (<JobCard key={job.id} job={job} boardID={boardID} refresh={getJobList} />))}
             </Container>

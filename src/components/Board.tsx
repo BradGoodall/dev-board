@@ -33,10 +33,9 @@ function Board() {
 
 
     // Get the users board data
-    const retrieveBoardData = async () => {
+    const retrieveBoardData = async (loadableBoardID: string) => {
         try {
-            let loadableBoardID = boardID;
-            if (boardID == "") {
+            if (loadableBoardID == "") {
                 // Get users board id
                 setBoardID(user!.boardID);
                 loadableBoardID = user!.boardID;
@@ -65,26 +64,25 @@ function Board() {
 
         })
         console.log('#WRITE Updated Board Name');
-        await retrieveBoardData();
+        await retrieveBoardData(boardID);
     }
 
     useEffect(() => {
-        if (user) {
-            if (boardURL) {
-                setBoardID(boardURL)
-                console.log("BoardID set from URL")
-            }
-            retrieveBoardData();
+        if (boardURL) {
+            setBoardID(boardURL)
+            console.log("BoardID set from URL: " + boardURL)
+            retrieveBoardData(boardURL);
         }
+        else retrieveBoardData(boardID);
     }, [user])
 
     return (
         <>
             <TopNavbar />
-            {user && boardID != "" && (
+            {boardID != "" && boardData && (
                 <div style={{ padding: "2rem" }}>
                     {!editBoardName && (
-                        <h1>{boardData?.boardName} <Button size='sm' variant="secondary" onClick={() => setEditBoardName(true)}>Edit Board Title</Button></h1>
+                        <h1>{boardData?.boardName} {user?.userID == boardData.ownerID && (<Button size='sm' variant="secondary" onClick={() => setEditBoardName(true)}>Edit Board Title</Button>)}</h1>
                     )}
                     {editBoardName && (
                         <>
@@ -94,14 +92,14 @@ function Board() {
                     )}
                     <h6 style={{ color: 'gray' }}>Sharable URL: <a href={"https://devboard.io/board/" + boardID}>devboard.io/board/{boardID}</a></h6>
 
-                    <JobList boardID={boardID} />
+                    <JobList boardID={boardID} boardData={boardData} />
                 </div>
             )}
-            {!user && (
+            {boardID == "" && !user && (
                 <>
-                    <div style={{ padding: "2rem" }}>
-                        <h1>For now, you must be logged in to view a board.</h1>
-                        <h3>This will change in the future.</h3>
+                    <div className="window-box">
+                        <h3>You need an account to use <span style={{ fontFamily: "'Share Tech Mono', monospace" }}>devBoard</span></h3>
+                        <Button variant="success" href="/login">Get Started</Button>
                     </div>
                 </>
             )}

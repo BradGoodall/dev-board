@@ -7,7 +7,7 @@ function Home() {
     return (
         <>
             <TopNavbar />
-            <div className="windowBox">
+            <div className="window-box">
                 <h3>Welcome to <span style={{ fontFamily: "'Share Tech Mono', monospace" }}>devBoard</span></h3>
                 <h5>Your Collaborative Project Hub</h5>
                 <p>This project is in development, for more information visit <a href="https://brad.codes/">Brad.Codes</a></p>
